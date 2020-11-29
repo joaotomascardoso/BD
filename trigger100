@@ -1,0 +1,18 @@
+create or replace function medico_consultas() returns trigger AS
+
+$$
+	begin
+		if new.num_cedula in (SELECT num_cedula, count(num_cedula) FROM
+(SELECT num_cedula, inst, EXTRACT(WEEK FROM data_registo) AS week,
+EXTRACT(YEAR FROM data_registo) AS year
+FROM analise) AS foo GROUP BY num_cedula,inst,week,year HAVING count(num_cedula) >=100)
+		then
+
+		raise exception'Medico ja tem 100 consultas nessa instituicao e nessa semana',new.num_cedula;
+		end if;
+	return new
+	end;
+$$
+Language plpgsql;
+
+create trigger medico_concultas_trigger before insert on consulta for each row execute procedure medico_consultas()
