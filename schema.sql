@@ -45,6 +45,7 @@ CREATE TABLE medico (
         PRIMARY KEY (num_cedula)
 );
 
+
 CREATE TABLE consulta (
         num_cedula integer,
         num_doente integer,
@@ -68,7 +69,7 @@ CREATE TABLE prescricao (
         CHECK (quant > 0)
 ); 
 
-CREATE TABLE analise (  --RI apenas definível apenas com extensões procedimentais create assertions ou triggers
+CREATE TABLE analise (  
         num_analise integer,
         especialidade varchar(80) NOT NULL,
         num_cedula integer,
@@ -99,7 +100,7 @@ CREATE TABLE prescricao_venda (
         num_doente integer,
         data date,
         substancia varchar(80),
-        num_venda integer,
+        num_venda integer UNIQUE,
         PRIMARY KEY (num_cedula,num_doente,data,substancia,num_venda),
         FOREIGN KEY (num_cedula,num_doente,substancia,data) REFERENCES prescricao(num_cedula,num_doente,substancia,data) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (num_venda) REFERENCES venda_farmacia(num_venda) ON DELETE CASCADE
